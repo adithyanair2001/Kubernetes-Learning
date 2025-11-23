@@ -83,6 +83,7 @@ spec:
         image: nginx:1.14.2
         ports:
         - containerPort: 80
+```
 
 ## 4. The "Desired State" Model
 Kubernetes functions on **Declarative Configuration**.
