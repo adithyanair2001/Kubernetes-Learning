@@ -83,3 +83,44 @@ spec:
         image: nginx:1.14.2
         ports:
         - containerPort: 80
+
+## 4. The "Desired State" Model
+Kubernetes functions on **Declarative Configuration**.
+1.  **User:** Submits a YAML file defining the "Desired State" (e.g., "Run 3 copies of App X").
+2.  **Kubernetes:** continuously monitors the "Current State."
+3.  **Reconciliation:** If Current State != Desired State, K8s acts automatically to fix it.
+
+## 5. Basic Glossary for Beginners
+*   **Container:** The packaging of software (e.g., Docker).
+*   **Orchestration:** The management of many containers.
+*   **Replica:** A copy of a Pod. If you want high availability, you run multiple replicas.
+*   **Service:** An abstraction which defines a logical set of Pods and a policy by which to access them (often acts as a stable IP address).
+*   **Namespace:** Virtual clusters backed by the same physical cluster (used to separate teams or environments like Dev/Prod).
+
+
+---
+
+## 7. Storage (Persistence)
+
+By default, containers are **stateless**. If a container crashes, any file inside it is deleted. This is bad for databases. Kubernetes solves this by decoupling "Storage Hardware" from "Storage Requests."
+
+### The Concepts
+1.  **Persistent Volume (PV):** The actual piece of hardware (e.g., an AWS EBS drive, a Google Disk, or a physical Hard Drive). It is managed by the Admin.
+2.  **Persistent Volume Claim (PVC):** A "ticket" created by the Developer. It says "I need 10GB of storage."
+
+**The Analogy:**
+*   **PV** is a wall socket (Electricity).
+*   **PVC** is the plug you hold. You don't care if the electricity comes from wind or coal; you just need the plug to fit the socket.
+
+### Storage YAML Example (The Claim)
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-db-storage
+spec:
+  accessModes:
+    - ReadWriteOnce # Can be mounted by one node only
+  resources:
+    requests:
+      storage: 5Gi  # Requesting 5 Gigabytes
